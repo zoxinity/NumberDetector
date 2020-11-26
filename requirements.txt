@@ -1,2 +1,6 @@
-opencv-python==4.4.0.46
-scikit-learn==0.23.2
+opencv-python
+keras
+python-mnist
+tensorflow
+numpy
+scikit-learn

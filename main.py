@@ -9,25 +9,29 @@ from src.detectDigits import detectDigits
 from src.train import train
 
 
-def predict(files, knn_clf):
+def predict(file, knn_clf):
 
     cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
 
-    inImage = cv2.imread(files[0], cv2.IMREAD_GRAYSCALE)
+    inImage = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
 
     # detect digits on the image
-    digits, digitsCoords = detectDigits(inImage)
+    digits, digitsCoords, borders = detectDigits(inImage)
 
-    for (digit, coords) in zip(digits, digitsCoords):
+    for (digit, coords, border) in zip(digits, digitsCoords, borders):
         # normalize image
         digit = digit/255.0
-        cv2.imshow("lol", digit)
-        cv2.waitKey(0)
+        # cv2.imshow("lol", digit)
+        # cv2.waitKey(0)
         digit = digit.reshape((1, 28*28))
 
         prediction = str(knn_clf.predict(digit))
 
         # display prediction near by each digit on the image
+        [x, y, w, h] = border
+        inImage = cv2.rectangle(inImage, (x, y), (x + w, y + h),
+                                color=0, thickness=2)
+
         cv2.putText(
             inImage,
             prediction,
@@ -48,9 +52,9 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='Program for detection write digits')
-    parser.add_argument('files', metavar='path', type=str, nargs='*',
+    parser.add_argument('files', metavar='path', type=list, nargs='*',
                         help='files for processing',
-                        default='resources/img.jpg')
+                        default=['resources/img.jpg'])
     parser.add_argument('-t', '--train', dest='is_train', action='store_true',
                         help='set this flag if it is training stage')
     parser.add_argument('-m', '--model', dest='model_file',
@@ -68,7 +72,7 @@ def main():
         except OSError:
             sys.exit(f"Can't open model file by path '{args.model_file}'"
                      "\nPlease, train model (or set correct path)")
-        for line in args.fiels:
+        for line in args.files:
             predict(line, knn_clf)
 
 

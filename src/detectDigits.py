@@ -58,9 +58,11 @@ def detectDigits(inImage):
         closing, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     res = []
     coords = []
+    borders = []
     imgH, imgW = inImage.shape
     for cnt in contours:
-        [x, y, w, h] = cv2.boundingRect(cnt)
+        border = cv2.boundingRect(cnt)
+        [x, y, w, h] = border
         if num_constraint(x, y, w, h, imgW, imgH):
             # rimg = inImage.copy()
             # cv2.rectangle(rimg, (x,y), (x+w,y+h), (255,255,255), 2)
@@ -68,8 +70,9 @@ def detectDigits(inImage):
             cropImg, coord = crop(thresh, (x,y,w,h), (28,28))
             res.append(cropImg)
             coords.append(coord)
+            borders.append(border)
 
-    return res, coords
+    return res, coords, borders
 
 
 def main():

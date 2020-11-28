@@ -21,8 +21,6 @@ digits, digitsCoords = detectDigits(inImage)
 for (digit, coords) in zip(digits, digitsCoords):
     # normalize image
     digit = digit/255.0
-    cv2.imshow("lol", digit)
-    cv2.waitKey(0)
     digit = digit.reshape((1, 28*28))
     
     # load model and make prediction

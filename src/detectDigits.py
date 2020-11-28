@@ -67,7 +67,7 @@ def detectDigits(inImage):
             # rimg = inImage.copy()
             # cv2.rectangle(rimg, (x,y), (x+w,y+h), (255,255,255), 2)
             # imshow("1", rimg)
-            cropImg, coord = crop(thresh, (x,y,w,h), (28,28))
+            cropImg, coord = crop(thresh, (x, y, w, h), (28, 28))
             res.append(cropImg)
             coords.append(coord)
             borders.append(border)
@@ -82,8 +82,8 @@ def main():
     inImage = cv2.imread(path+sample, cv2.IMREAD_GRAYSCALE)
     imshow("1", inImage)
 
-    digits, digitsCoords = detectDigits(inImage)
-    for (digit, _) in zip(digits, digitsCoords):
+    digits, _, _ = detectDigits(inImage)
+    for digit in digits:
         cv2.imshow("digit", digit)
         cv2.waitKey(0)
 

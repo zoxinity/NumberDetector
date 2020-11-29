@@ -1,5 +1,6 @@
 from cv2 import cv2
 import numpy as np
+import math
 
 
 def imshow(winname, mat):
@@ -26,9 +27,9 @@ def crop(img, rect, size):
     xc, yc = x+w//2, y+h//2
     s = 0
     if h > w:
-        s = h
+        s = math.ceil(h*1.35)
     else:
-        s = w
+        s = math.ceil(w*1.35)
     xc, yc = xc-s//2, yc-s//2
     coord = xc, yc
     crop = cv2.resize(img[yc:yc+s, xc:xc+s], size)

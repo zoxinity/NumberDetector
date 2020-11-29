@@ -52,7 +52,7 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='Program for detection write digits')
-    parser.add_argument('files', metavar='path', type=list, nargs='*',
+    parser.add_argument('files', metavar='path', type=str, nargs='*',
                         help='files for processing',
                         default=['resources/img.jpg'])
     parser.add_argument('-t', '--train', dest='is_train', action='store_true',

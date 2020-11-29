@@ -1,7 +1,5 @@
 # Установка зависимостей #
-
-pip install -r requirements.txt
-
+    pip install -r requirements.txt
 # Запуск программы #
 ## Синтаксис ##
     python main.py [-t | --train] [-m | --model <path_to_model>] [<img1_path> <img2_path> ...]

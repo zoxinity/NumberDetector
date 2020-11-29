@@ -39,7 +39,8 @@ def predict(file, knn_clf):
             fontFace=cv2.FONT_HERSHEY_SIMPLEX,
             fontScale=1,
             color=0,
-            lineType=2,
+            thickness=2,
+            lineType=cv2.LINE_AA,
         )
 
     cv2.imshow("Result", inImage)

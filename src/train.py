@@ -2,9 +2,10 @@ from keras.datasets import mnist
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
 import os
+from src.extractor import raw_pixels, extract_slope
 
 
-def train(model_file):
+def train(model_file, extractor=extract_slope):
     model_path = os.path.abspath(model_file)
     model_dir_abs_path = os.path.dirname(model_path)
 
@@ -15,9 +16,12 @@ def train(model_file):
     X_train = X_train / 255.0
     X_test = X_test / 255.0
 
-    # reshape data
-    X_train = X_train.reshape((-1, 28 * 28))
-    X_test = X_test.reshape((-1, 28 * 28))
+    # X_train = X_train[:600, :, :]
+    # X_test = X_test[:100, :, :]
+
+    # extract features from data
+    X_train = extractor(X_train)
+    X_test = extractor(X_test)
 
     # train KN classifier
     knn_clf = KNeighborsClassifier(
@@ -31,7 +35,8 @@ def train(model_file):
     # save model
     if not os.path.exists(model_dir_abs_path):
         os.makedirs(model_dir_abs_path)
-    pickle.dump(knn_clf, open(model_path, 'wb+'))
+    with open(model_path, 'wb+') as f_out:
+        pickle.dump(knn_clf, f_out)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 import numpy as np
 from cv2 import cv2
 
+import sys
+
 def processData(inImage):
     ret = []
     convData = []
@@ -17,12 +19,12 @@ def processData(inImage):
     # reshape data
     inImage = inImage.reshape((-1, 28 * 28))
 
-    # ret = np.zeros((len(inImage), len(inImage[0]) + len(convData[0])))
+    ret = np.zeros((len(inImage), len(inImage[0]) + len(convData[0])))
     
-    # for i, (Xo, Xc) in enumerate(zip(inImage, convData)):
-    #     ret[i] = np.concatenate((Xo, Xc))
+    for i, (Xo, Xc) in enumerate(zip(inImage, convData)):
+        ret[i] = np.concatenate((Xo, Xc))
 
-    return inImage, convData
+    return ret
 
 def convolution(inImage):
     ret = []

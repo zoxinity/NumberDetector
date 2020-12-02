@@ -10,7 +10,6 @@ from src.featureExtractions import convolution, processData
 from src.detectDigits import detectDigits
 from src.train import train
 
-
 def predict(file, knn_clf):
 
     cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
@@ -26,7 +25,7 @@ def predict(file, knn_clf):
         # cv2.waitKey(0)
 
         # extract features
-        digit, _ = processData(digit)
+        digit = processData(digit)
         
         prediction = str(knn_clf.predict(digit))
 
@@ -43,7 +42,7 @@ def predict(file, knn_clf):
             fontScale=1,
             color=0,
             thickness=2,
-            lineType=cv2.LINE_AA,
+            lineType=cv2.LINE_AA
         )
 
     cv2.imshow("Result", inImage)

@@ -16,8 +16,8 @@ def train(model_file):
     (X_train_origin, y_train), (X_test_origin, y_test) = mnist.load_data()
 
     # extract features
-    X_train, _ = processData(X_train_origin)
-    X_test, _ = processData(X_test_origin)
+    X_train = processData(X_train_origin)
+    X_test = processData(X_test_origin)
 
     parametrs = {
         'n_neighbors': range(1, 7, 2),

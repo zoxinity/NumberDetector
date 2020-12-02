@@ -8,8 +8,8 @@
 ## Распознавание ##
     python main.py
     python main.py resources/img.jpg
-    python main.py -m recources/knn_clf.sav
-    python main.py -m recources/knn_clf.sav resources/img.jpg
+    python main.py -m resources/knn_clf.sav
+    python main.py -m resources/knn_clf.sav resources/img.jpg
     python main.py resources/sample1.jpg resources/sample2.jpg
 # Результаты работы программы #
 | file name     |  correctly guessed |

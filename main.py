@@ -3,8 +3,10 @@ from cv2 import cv2
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 import argparse
+import numpy as np
 
 
+from src.featureExtractions import convolution, processData
 from src.detectDigits import detectDigits
 from src.train import train
 
@@ -12,6 +14,7 @@ from src.train import train
 def predict(file, knn_clf):
 
     cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
+    # cv2.namedWindow("lol", cv2.WINDOW_NORMAL)
 
     inImage = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
 
@@ -19,12 +22,12 @@ def predict(file, knn_clf):
     digits, digitsCoords, borders = detectDigits(inImage)
 
     for (digit, coords, border) in zip(digits, digitsCoords, borders):
-        # normalize image
-        digit = digit/255.0
         # cv2.imshow("lol", digit)
         # cv2.waitKey(0)
-        digit = digit.reshape((1, 28*28))
 
+        # extract features
+        digit, _ = processData(digit)
+        
         prediction = str(knn_clf.predict(digit))
 
         # display prediction near by each digit on the image

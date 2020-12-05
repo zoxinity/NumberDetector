@@ -12,16 +12,16 @@
     python main.py -m resources/knn_clf.sav resources/img.jpg
     python main.py resources/sample1.jpg resources/sample2.jpg
 # Результаты работы программы #
-| file name     |  correctly guessed |
-|:--------------|:-------------------|
-| img           | 9/20               |
-| pen_black     | 6/10               |
-| pen_blue      | 6/10               |
-| pencil        | 6/10               |
-| sample1       | 4/5                |
-| sample2       | 4/5                |
-| sample3       | 4/5                |
-| sample4       | 5/5                |
-| thick_black   | 7/10               |
-| thick_blue    | 8/10               |
-| thick_red     | 8/10               |
+| file name   | mad_conv |
+|:------------|:---------|
+| img1        | 15/20    |
+| pen_black   | 9/10     |
+| pen_blue    | 9/10     |
+| pencil      | 7/10     |
+| sample1     | 5/6      |
+| sample2     | 5/6      |
+| sample3     | 5/6      |
+| sample4     | 6/6      |
+| thick_black | 9/10     |
+| thick_blue  | 9/10     |
+| thick_red   | 10/10    |

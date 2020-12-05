@@ -3,47 +3,49 @@ from cv2 import cv2
 import pickle
 from sklearn.neighbors import KNeighborsClassifier
 import argparse
+import numpy as np
 
 
-from src.detectDigits import detectDigits
-from src.train import train
+from src.extractor import processData
+from src.detector import detectDigits
+from src.trainer import train
 
 
 def predict(file, knn_clf):
 
     cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
 
-    inImage = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
 
     # detect digits on the image
-    digits, digitsCoords, borders = detectDigits(inImage)
+    digits, digits_coords, borders = detectDigits(img)
 
-    for (digit, coords, border) in zip(digits, digitsCoords, borders):
-        # normalize image
-        digit = digit/255.0
-        # cv2.imshow("lol", digit)
+    for (digit, coords, border) in zip(digits, digits_coords, borders):
+        # cv2.imshow("digit", digit)
         # cv2.waitKey(0)
-        digit = digit.reshape((1, 28*28))
+
+        # extract features
+        digit = processData(digit)
 
         prediction = str(knn_clf.predict(digit))
 
         # display prediction near by each digit on the image
         [x, y, w, h] = border
-        inImage = cv2.rectangle(inImage, (x, y), (x + w, y + h),
-                                color=0, thickness=2)
+        img = cv2.rectangle(img, (x, y), (x + w, y + h),
+                            color=0, thickness=2)
 
         cv2.putText(
-            inImage,
+            img,
             prediction,
             coords,
             fontFace=cv2.FONT_HERSHEY_SIMPLEX,
             fontScale=1,
             color=0,
             thickness=2,
-            lineType=cv2.LINE_AA,
+            lineType=cv2.LINE_AA
         )
 
-    cv2.imshow("Result", inImage)
+    cv2.imshow("Result", img)
     cv2.waitKey(0)
 
     cv2.destroyAllWindows()
@@ -55,7 +57,7 @@ def main():
         description='Program for detection write digits')
     parser.add_argument('files', metavar='path', type=str, nargs='*',
                         help='files for processing',
-                        default=['resources/img.jpg'])
+                        default=['resources/img1.jpg'])
     parser.add_argument('-t', '--train', dest='is_train', action='store_true',
                         help='set this flag if it is training stage')
     parser.add_argument('-m', '--model', dest='model_file',

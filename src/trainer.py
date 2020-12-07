@@ -31,7 +31,7 @@ def train(model_file):
         n_neighbors=5, n_jobs=-1, algorithm='ball_tree',
         leaf_size=20, weights='distance')
     knn_clf = knn_clf.fit(proc_data_train, labels_train)
-    print("    Classifier tarined")
+    print("    Classifier trained")
 
     # save model
     if not os.path.exists(model_dir_abs_path):

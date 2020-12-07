@@ -8,12 +8,23 @@ def processData(images):
     images = images / 255.0
     images = images.reshape((-1, 28, 28))
 
-    conv_data = []
-    for img in images:
-        conv_data.append(convolution(img))
+    for i, image in enumerate(images):
+        image = cv2.blur(image, (3,3))
+        cv2.normalize(image, image, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
+        # cv2.imshow("Result", image)
+        # cv2.waitKey(0)
+        # sys.exit()
+        images[i] = image
 
-    conv_data = np.array(conv_data)
-    return conv_data
+    images = images.reshape((-1, 28 * 28))
+    return images
+
+    # conv_data = []
+    # for img in images:
+    #     conv_data.append(convolution(img))
+
+    # conv_data = np.array(conv_data)
+    # return conv_data
 
 
 def convRect(img, x, y, w, h):

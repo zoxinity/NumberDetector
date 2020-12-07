@@ -14,14 +14,14 @@
 # Результаты работы программы #
 | file name   | mad_conv |
 |:------------|:---------|
-| img1        | 15/20    |
-| pen_black   | 9/10     |
+| img1        | 18/20    |
+| pen_black   | 10/10    |
 | pen_blue    | 9/10     |
-| pencil      | 7/10     |
-| sample1     | 5/6      |
-| sample2     | 5/6      |
-| sample3     | 5/6      |
+| pencil      | 8/10     |
+| sample1     | 6/6      |
+| sample2     | 6/6      |
+| sample3     | 6/6      |
 | sample4     | 6/6      |
 | thick_black | 9/10     |
 | thick_blue  | 9/10     |
-| thick_red   | 10/10    |
+| thick_red   | 9/10     |

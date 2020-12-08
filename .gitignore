@@ -139,4 +139,4 @@ cython_debug/
 resources/knn_clf.sav
 
 .vscode
-
+*.sav

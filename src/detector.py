@@ -12,11 +12,11 @@ def nextOdd(num):
     return (num//2)*2+1
 
 
-def num_constraint(x, y, w, h, param, imgH, imgW):
+def num_constraint(x, y, w, h, param, img_h, img_w):
     border = param//20
 
     # border constraint
-    if (x < border) or (y < border) or (x+w > imgW - border) or (y+h > imgH - border):
+    if (x < border) or (y < border) or (x+w > img_w - border) or (y+h > img_h - border):
         return False
 
     # size constraint
@@ -28,34 +28,35 @@ def num_constraint(x, y, w, h, param, imgH, imgW):
 
 def crop(img, rect, size):
     [x, y, w, h] = rect
-    xc, yc = x+w//2, y+h//2
+    M = cv2.moments(img[y:y+h, x:x+w])
+    xc, yc = x+(M["m10"] / M["m00"]), y+(M["m01"] / M["m00"])
     s = 0
     if h > w:
         s = math.ceil(h*1.4)
     else:
         s = math.ceil(w*1.4)
-    xc, yc = xc-s//2, yc-s//2
+    xc, yc = int(xc-s//2), int(yc-s//2)
     coord = xc, yc
     crop = cv2.resize(img[yc:yc+s, xc:xc+s], size,
                       None, None, None, cv2.INTER_LANCZOS4)
     return crop, coord
 
 
-def detectDigits(inImage):
-    imgH, imgW = inImage.shape
+def detectDigits(img):
+    img_h, img_w = img.shape
     param = 0
-    if imgH > imgW:
-        param = imgW
+    if img_h > img_w:
+        param = img_w
     else:
-        param = imgH
+        param = img_h
 
     bks = nextOdd(param//60)  # blur kernel size
     tks = nextOdd(param//14)  # threshold kernel size
-    oks = nextOdd(param//200) # opening kernel size
+    oks = nextOdd(param//200)  # opening kernel size
     cks = nextOdd(param//15)  # closing kernel size
 
     # перевод в бинарное изображение
-    blur = cv2.GaussianBlur(inImage, (bks, bks), 0, None, 0, cv2.BORDER_REPLICATE)
+    blur = cv2.GaussianBlur(img, (bks, bks), 0, None, 0, cv2.BORDER_REPLICATE)
     # imshow("1", blur)
     thresh = cv2.adaptiveThreshold(
         blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, tks, 22)
@@ -81,7 +82,7 @@ def detectDigits(inImage):
     for cnt in contours:
         border = cv2.boundingRect(cnt)
         [x, y, w, h] = border
-        if num_constraint(x, y, w, h, param, imgH, imgW):
+        if num_constraint(x, y, w, h, param, img_h, img_w):
             # rimg = inImage.copy()
             # cv2.rectangle(rimg, (x,y), (x+w,y+h), (255,255,255), 2)
             # imshow("1", rimg)
@@ -96,15 +97,16 @@ def detectDigits(inImage):
 def main():
     # загрузка изображения
     path = "D:\\prog\\repos\\NumberDetector\\resources\\"
-    sample = "img.jpg"
-    inImage = cv2.imread(path+sample, cv2.IMREAD_GRAYSCALE)
+    sample = "img1.jpg"
+    img = cv2.imread(path+sample, cv2.IMREAD_GRAYSCALE)
 
     scale_factor = 1
-    inImage = cv2.resize(inImage, None, None, scale_factor, scale_factor, cv2.INTER_LANCZOS4)
+    img = cv2.resize(img, None, None, scale_factor,
+                     scale_factor, cv2.INTER_LANCZOS4)
 
-    imshow("1", inImage)
+    imshow("1", img)
 
-    digits, _, _ = detectDigits(inImage)
+    digits, _, _ = detectDigits(img)
     for digit in digits:
         cv2.imshow("digit", digit)
         cv2.waitKey(0)

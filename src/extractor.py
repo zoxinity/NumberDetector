@@ -93,5 +93,67 @@ def convolution(img):
     return ret
 
 
+def count_intersep(image, x, y, w , h):
+    cnt = 0
+    for i in range(x, x+h-1):
+        if image[y, i] != image[y, i+1]:
+            cnt = cnt + 1
+        if image[y+w, i] != image[y+w, i+1]:
+            cnt = cnt + 1
+    for i in range(y, y+w-1):
+        if image[i, x] != image[i+1, x]:
+            cnt = cnt + 1
+        if image[i, x+h] != image[y+1, x+h]:
+            cnt = cnt + 1
+    return cnt
+
+
+def extract_parts(images, h=7, w=7):
+    images = make_bin_image(images)
+    res = []
+    for image in images:
+        X, Y = image.shape
+        l1 = list()
+        for x in range(X-h):
+            l2 = list()
+            for y in range(Y-w):
+                l2.append(count_intersep(image, y, x, h, w))
+            l1.append(l2)
+        res.append(l1)
+    res_arr = np.array(res)
+    return res_arr.reshape((-1, (28-h) * (28-w)))
+
+
+def make_bin_image(images):
+    return np.where(images < 0.5, 0., 1.)
+
+
+from src.detector import detectDigits
 if __name__ == "__main__":
-    pass
+    file = '../resources/thick_black.jpg'
+    cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
+
+    inImage = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
+    if inImage is None:
+        raise ValueError(f"can't read file {file}")
+
+    # detect digits on the image
+    digits, digitsCoords, borders = detectDigits(inImage)
+    cv2.namedWindow('custom window', cv2.WINDOW_KEEPRATIO)
+    cv2.resizeWindow('custom window', 500, 500)
+    for (digit, coords, border) in zip(digits, digitsCoords, borders):
+        # normalize image
+        digit = digit / 255.0
+        cv2.imshow('custom window', digit)
+        cv2.waitKey(0)
+
+        digit = digit.reshape((1, 28, 28))
+        digit = extract_parts(digit)
+        digit = digit.reshape((21, 21))
+        digit = digit / np.max(digit)
+        cv2.imshow('custom window', digit)
+        cv2.waitKey(0)
+        # break
+
+    cv2.destroyAllWindows()
+

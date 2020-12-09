@@ -1,4 +1,4 @@
-from src.detectDigits import detectDigits
+from src.detector import detectDigits
 from cv2 import cv2
 from src.extractor import raw_pixels
 

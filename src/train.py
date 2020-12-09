@@ -22,6 +22,7 @@ def train(model_file, extractor=extract_slope):
     # extract features from data
     X_train = extractor(X_train)
     X_test = extractor(X_test)
+    print("data ready")
 
     # train KN classifier
     knn_clf = KNeighborsClassifier(

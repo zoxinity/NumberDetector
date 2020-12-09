@@ -10,52 +10,14 @@ from src.extractor import processData
 from src.detector import detectDigits
 from src.trainer import train
 
-
-def predict(file, knn_clf):
-
-    cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
-
-    img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
-
-    # detect digits on the image
-    digits, digits_coords, borders = detectDigits(img)
-
-    for (digit, coords, border) in zip(digits, digits_coords, borders):
-        # cv2.imshow("digit", digit)
-        # cv2.waitKey(0)
-
-        # extract features
-        digit = processData(digit)
 from src.predict import predict
 from src.train import train
-from src.extractor import extract_slope, raw_pixels
+from src.extractor import extract_slope, raw_pixels, extract_parts
 
-        prediction = str(knn_clf.predict(digit))
-
-        # display prediction near by each digit on the image
-        [x, y, w, h] = border
-        img = cv2.rectangle(img, (x, y), (x + w, y + h),
-                            color=0, thickness=2)
-
-        cv2.putText(
-            img,
-            prediction,
-            coords,
-            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-            fontScale=1,
-            color=0,
-            thickness=2,
-            lineType=cv2.LINE_AA
-        )
-
-    cv2.imshow("Result", img)
-    cv2.waitKey(0)
-
-    cv2.destroyAllWindows()
-curr_extractor = extract_slope
+curr_extractor = extract_parts
 
 
-def main():
+def main(force_train=False):
 
     parser = argparse.ArgumentParser(
         description='Program for detection write digits')
@@ -70,8 +32,8 @@ def main():
                              'updated for training or read for prediction')
     args = parser.parse_args()
 
-    if args.is_train:
-        train(args.model_file)
+    if args.is_train or force_train:
+        train(args.model_file, extractor=curr_extractor)
     else:
         # load model and make prediction
         try:
@@ -80,7 +42,7 @@ def main():
             sys.exit(f"Can't open model file by path '{args.model_file}'"
                      "\nPlease, train model (or set correct path)")
         for line in args.files:
-            predict(line, knn_clf)
+            predict(line, knn_clf, extractor=curr_extractor)
 
 
 if __name__ == '__main__':

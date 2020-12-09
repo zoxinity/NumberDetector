@@ -14,8 +14,11 @@ from src.trainer import train
 def predict(file, knn_clf):
 
     cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
-
+    # cv2.namedWindow("digit", cv2.WINDOW_NORMAL)
+    
     img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        exit(f"Error: image file '{file}' not found")
 
     # detect digits on the image
     digits, digits_coords, borders = detectDigits(img)
@@ -72,7 +75,7 @@ def main():
         # load model and make prediction
         try:
             knn_clf = pickle.load(open(args.model_file, 'rb'))
-        except OSError:
+        except FileNotFoundError:
             sys.exit(f"Can't open model file by path '{args.model_file}'"
                      "\nPlease, train model (or set correct path)")
         for line in args.files:

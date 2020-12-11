@@ -40,7 +40,7 @@ def train(model_file):
     print("    Model saved")
 
     # calc accuracy
-    print("Accuracy = ", knn_clf.score(proc_data_test, labels_test))
+    # print("Accuracy = ", knn_clf.score(proc_data_test, labels_test))
 
 
 if __name__ == "__main__":

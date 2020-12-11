@@ -64,27 +64,27 @@ def thin_digits(images):
         _, image = cv2.threshold(image,0.1,1,cv2.THRESH_BINARY)
 
         image = gnaw_digit(image, 12)
+        # cv2.imshow("digit", image)
 
         images[i] = image
 
-    images = images.reshape((-1, 28 * 28))
+    images = images / 255.0
+    #images = images.reshape((-1, 28 * 28))
     return images
+
 
 def processData(images):
     # normalize data
-    images = images / 255.0
     images = images.reshape((-1, 28, 28))
 
     images = thin_digits(images)
 
-    return images
+    conv_data = []
+    for img in images:
+        conv_data.append(convolution(img))
 
-    # conv_data = []
-    # for img in images:
-    #     conv_data.append(convolution(img))
-
-    # conv_data = np.array(conv_data)
-    # return conv_data
+    conv_data = np.array(conv_data)
+    return conv_data
 
 
 def convRect(img, x, y, w, h):

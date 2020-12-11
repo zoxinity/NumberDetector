@@ -13,8 +13,7 @@ from src.trainer import train
 
 def predict(file, knn_clf):
 
-    cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
-    # cv2.namedWindow("digit", cv2.WINDOW_NORMAL)
+    cv2.namedWindow("digit", cv2.WINDOW_NORMAL)
     
     img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
     if img is None:
@@ -24,13 +23,21 @@ def predict(file, knn_clf):
     digits, digits_coords, borders = detectDigits(img)
 
     for (digit, coords, border) in zip(digits, digits_coords, borders):
-        # cv2.imshow("digit", digit)
-        # cv2.waitKey(0)
-
+        #cv2.imshow("digit", digit)
+        
         # extract features
         digit = processData(digit)
-
+        
         prediction = str(knn_clf.predict(digit))
+        
+        probs = knn_clf.predict_proba(digit)
+
+        print(prediction)
+        print(dict(zip(range(10), np.around(probs[0], 2))))
+        if max(probs[0]) < 0.4:
+            prediction = "NaN"
+
+        cv2.waitKey(0)
 
         # display prediction near by each digit on the image
         [x, y, w, h] = border
@@ -48,6 +55,7 @@ def predict(file, knn_clf):
             lineType=cv2.LINE_AA
         )
 
+    cv2.namedWindow("Result", cv2.WINDOW_NORMAL)
     cv2.imshow("Result", img)
     cv2.waitKey(0)
 
